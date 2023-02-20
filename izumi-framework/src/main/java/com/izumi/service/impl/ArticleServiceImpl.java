@@ -3,12 +3,16 @@ package com.izumi.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Article;
+import com.izumi.domain.vo.HotArticleVo;
 import com.izumi.mapper.ArticleMapper;
 import com.izumi.service.ArticleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +35,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         List<Article> articles = page.getRecords();
 
-        return ResponseResult.okResult(articles);
+        // bean拷贝
+        List<HotArticleVo> articleVos = new ArrayList<>();
+        for (Article article : articles) {
+            HotArticleVo vo = new HotArticleVo();
+            BeanUtils.copyProperties(article, vo);
+            articleVos.add(vo);
+        }
+
+        return ResponseResult.okResult(articleVos);
     }
 }
