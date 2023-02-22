@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.util.BeanUtil;
+import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Article;
 import com.izumi.domain.vo.HotArticleVo;
@@ -24,7 +25,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
 
         // 必须是正式文章
-        queryWrapper.eq(Article::getStatus, 0);
+        queryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
 
         // 安装浏览量进行排序
         queryWrapper.orderByDesc(Article::getViewCount);
