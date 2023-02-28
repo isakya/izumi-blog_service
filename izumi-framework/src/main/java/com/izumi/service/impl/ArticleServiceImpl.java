@@ -7,6 +7,7 @@ import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Article;
 import com.izumi.domain.entity.Category;
+import com.izumi.domain.vo.ArticleDetailVo;
 import com.izumi.domain.vo.ArticleListVo;
 import com.izumi.domain.vo.HotArticleVo;
 import com.izumi.domain.vo.PageVo;
@@ -96,5 +97,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageVo pageVo = new PageVo(articleListVos, page.getTotal());
 
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult getArticleDetail(Long id) {
+        // 根据id查询文章
+        Article article = getById(id);
+        // 转换成VO
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
+        // 根据分类id查询分类名
+        Long categoryId = articleDetailVo.getCategoryId();
+        Category category = categoryService.getById(categoryId);
+        if(category!=null) {
+            articleDetailVo.setCategoryName(category.getName());
+        }
+        // 封装响应返回
+        return ResponseResult.okResult(articleDetailVo);
     }
 }
