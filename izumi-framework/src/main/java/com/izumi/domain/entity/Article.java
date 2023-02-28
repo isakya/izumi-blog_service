@@ -3,10 +3,13 @@ package com.izumi.domain.entity;
 import java.util.Date;
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 /**
  * 文章表(Article)表实体类
  *
@@ -18,8 +21,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("izumi_article")
+@Accessors(chain = true)
 public class Article {
-    
+    // 分类名称
+    @TableField(exist = false)
+    private String categoryName;
     private Long id;
     //标题
     private String title;
@@ -39,7 +45,7 @@ public class Article {
     private Long viewCount;
     //是否允许评论 1是，0否
     private String isComment;
-    
+
     private Long createBy;
     
     private Date createTime;
