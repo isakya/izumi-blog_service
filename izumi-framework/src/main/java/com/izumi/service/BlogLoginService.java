@@ -6,4 +6,6 @@ import com.izumi.domain.entity.User;
 public interface BlogLoginService {
 
     ResponseResult login(User user);
+
+    ResponseResult logout();
 }
