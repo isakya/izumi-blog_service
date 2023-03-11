@@ -43,17 +43,37 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 分页查询
         Page<Comment> page = new Page<>(pageNum, pageSize);
         page(page, queryWrapper);
-        List<Comment> records = page.getRecords();
 
 
-        List<CommentVo> commentVoList = toCommentListVoList(page.getRecords());
+        List<CommentVo> commentVoList = toCommentVoList(page.getRecords());
 
+        // 查询所有根评论对应的子评论，并且赋值给对应的属性
+        for (CommentVo commentVo : commentVoList) {
+            // 查询对应的子评论
+            List<CommentVo> children = getChildren(commentVo.getId());
+            // 赋值
+            commentVo.setChildren(children);
+        }
 
 
         return ResponseResult.okResult(new PageVo(commentVoList, page.getTotal()));
     }
 
-    private List<CommentVo> toCommentListVoList(List<Comment> list) {
+    /***
+     * 根据根评论的id查询所对应的子评论的集合
+     * @param id 根评论id
+     * @return
+     */
+    private List<CommentVo> getChildren(Long id) {
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getRootId, id);
+        queryWrapper.orderByAsc(Comment::getCreateTime);
+        List<Comment> comments = list(queryWrapper);
+        List<CommentVo> commentVos = toCommentVoList(comments);
+        return commentVos;
+    }
+
+    private List<CommentVo> toCommentVoList(List<Comment> list) {
         List<CommentVo> commentVos = BeanCopyUtils.copyBeanList(list, CommentVo.class);
         // 遍历vo集合
         for (CommentVo commentVo : commentVos) {
