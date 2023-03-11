@@ -1,6 +1,7 @@
 package com.izumi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Comment;
 
 
@@ -12,4 +13,5 @@ import com.izumi.domain.entity.Comment;
  */
 public interface CommentService extends IService<Comment> {
 
+    ResponseResult commentList(Long articleId, Integer pageNum, Integer pageSize);
 }
