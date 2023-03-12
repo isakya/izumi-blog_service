@@ -7,12 +7,16 @@ import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Comment;
 import com.izumi.domain.vo.CommentVo;
 import com.izumi.domain.vo.PageVo;
+import com.izumi.enums.AppHttpCodeEnum;
+import com.izumi.exception.SystemException;
 import com.izumi.mapper.CommentMapper;
 import com.izumi.service.CommentService;
 import com.izumi.service.UserService;
 import com.izumi.utils.BeanCopyUtils;
+import com.izumi.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -57,6 +61,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
 
         return ResponseResult.okResult(new PageVo(commentVoList, page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addComment(Comment comment) {
+        // 评论内容不能为空
+        if(!StringUtils.hasText(comment.getContent())) {
+            throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
+        }
+        save(comment);
+        return ResponseResult.okResult();
     }
 
     /***
