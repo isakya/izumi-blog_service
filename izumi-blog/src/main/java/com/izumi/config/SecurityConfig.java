@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").anonymous()
                 // 登出必须携带token认证
                 .antMatchers("/logout").authenticated()
-                .antMatchers("/link/getAllLink").authenticated()
+                // .antMatchers("/link/getAllLink").authenticated()
                 // 除上面外的所有请求全部不需要认证即可访问
                 .anyRequest().permitAll();
 
