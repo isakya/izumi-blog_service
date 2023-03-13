@@ -19,3 +19,9 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+
+
+oss:
+  accessKey: Tgur7W-zqteQ5sRopXE5IfRm1OGo6_6cAjLNZ7qv
+  secretKey: I0Iluu2_u32xn_mVt1EGMjcQICM8rNd2mJxLGsVU
+  bucket: izumi-blog
