@@ -1,5 +1,6 @@
 package com.izumi.controller;
 
+import com.izumi.annotation.SystemLog;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.User;
 import com.izumi.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
     }
 
     @PutMapping("/userInfo")
+    @SystemLog(businessName = "更新用户信息")
     public ResponseResult updateUserInfo(@RequestBody User user) {
         return userService.updateUserInfo(user);
     }
