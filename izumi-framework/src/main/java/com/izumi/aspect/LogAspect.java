@@ -31,7 +31,7 @@ public class LogAspect {
         try {
             handleBefore(joinPoint);
             ret = joinPoint.proceed();
-            handleAfter();
+            handleAfter(ret);
         } finally {
             // 结束后换行
             log.info("=======End=======" + System.lineSeparator());
@@ -40,7 +40,8 @@ public class LogAspect {
         return ret;
     }
 
-    private void handleAfter() {
+    private void handleAfter(Object ret) {
+        log.info("Response       : {}", JSON.toJSONString(ret));
     }
 
     private void handleBefore(ProceedingJoinPoint joinPoint) {
@@ -49,7 +50,7 @@ public class LogAspect {
         HttpServletRequest request = requestAttributes.getRequest();
 
         // 获取被增强方法上的注解对象
-        SystemLog systemLog = getSysemLog(joinPoint);
+        SystemLog systemLog = getSystemLog(joinPoint);
 
         log.info("=======Start=======");
         // 打印请求 URL
@@ -66,7 +67,7 @@ public class LogAspect {
         log.info("Request Args   : {}", JSON.toJSONString(joinPoint.getArgs()));
     }
 
-    private SystemLog getSysemLog(ProceedingJoinPoint joinPoint) {
+    private SystemLog getSystemLog(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         SystemLog systemLog = methodSignature.getMethod().getAnnotation(SystemLog.class);
         return systemLog;
