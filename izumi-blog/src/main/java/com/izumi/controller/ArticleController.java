@@ -4,10 +4,7 @@ import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Article;
 import com.izumi.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,11 @@ public class ArticleController {
     public ResponseResult hotArticleList() {
         ResponseResult result = articleService.hotArticleList();
         return result;
+    }
+
+    @PutMapping("/updateViewCount/{id}")
+    public ResponseResult updateViewCount(@PathVariable("id") Long id) {
+        return articleService.updateViewCount(id);
     }
 
     @GetMapping("/articleList")
