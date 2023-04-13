@@ -2,8 +2,10 @@ package com.izumi.controller;
 
 import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
+import com.izumi.domain.dto.AddCommentDto;
 import com.izumi.domain.entity.Comment;
 import com.izumi.service.CommentService;
+import com.izumi.utils.BeanCopyUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -24,7 +26,8 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseResult addComment(@RequestBody Comment comment) {
+    public ResponseResult addComment(@RequestBody AddCommentDto addCommentDto) {
+        Comment comment = BeanCopyUtils.copyBean(addCommentDto, Comment.class);
         return commentService.addComment(comment);
     }
 
