@@ -11,12 +11,9 @@ import com.qiniu.util.Auth;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 @SpringBootTest(classes = IzumiBlogApplication.class)
 @ConfigurationProperties(prefix = "oss")
