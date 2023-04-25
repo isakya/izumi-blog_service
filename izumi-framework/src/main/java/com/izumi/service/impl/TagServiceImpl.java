@@ -9,6 +9,7 @@ import com.izumi.domain.entity.Tag;
 import com.izumi.domain.vo.PageVo;
 import com.izumi.mapper.TagMapper;
 import com.izumi.service.TagService;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.TagName;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -36,5 +37,11 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         // 封装数据返回
         PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
         return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult addTag(Tag tag) {
+        save(tag);
+        return ResponseResult.okResult();
     }
 }

@@ -2,12 +2,11 @@ package com.izumi.controller;
 
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.TagListDto;
+import com.izumi.domain.entity.Tag;
 import com.izumi.domain.vo.PageVo;
 import com.izumi.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/content/tag")
@@ -17,5 +16,10 @@ public class TagController {
     @GetMapping("/list")
     public ResponseResult<PageVo> list(Integer pageNum, Integer pageSize, TagListDto tagListDto) {
         return tagService.pageTagList(pageNum, pageSize, tagListDto);
+    }
+
+    @PostMapping
+    public ResponseResult addTag(@RequestBody Tag tag) {
+        return tagService.addTag(tag);
     }
 }
