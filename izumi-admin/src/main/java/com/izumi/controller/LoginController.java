@@ -2,8 +2,10 @@ package com.izumi.controller;
 
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.LoginUser;
+import com.izumi.domain.entity.Menu;
 import com.izumi.domain.entity.User;
 import com.izumi.domain.vo.AdminUserInfoVo;
+import com.izumi.domain.vo.RoutersVo;
 import com.izumi.domain.vo.UserInfoVo;
 import com.izumi.enums.AppHttpCodeEnum;
 import com.izumi.exception.SystemException;
@@ -59,4 +61,15 @@ public class LoginController {
 
 
     }
+
+    @GetMapping("getRouters")
+    public ResponseResult<RoutersVo> getRouters() {
+        Long userId = SecurityUtils.getUserId();
+        // 查询menu 结果是tree的形式
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+        // 封装数据返回
+
+        return ResponseResult.okResult(new RoutersVo(menus));
+    }
+
 }
