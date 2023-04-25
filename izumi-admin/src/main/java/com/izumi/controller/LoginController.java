@@ -13,6 +13,7 @@ import com.izumi.service.LoginService;
 import com.izumi.service.MenuService;
 import com.izumi.service.RoleService;
 import com.izumi.utils.BeanCopyUtils;
+import com.izumi.utils.RedisCache;
 import com.izumi.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -34,6 +35,7 @@ public class LoginController {
     @Autowired
     private RoleService roleService;
 
+
     @PostMapping("/user/login")
     public ResponseResult login(@RequestBody User user) {
         if(!StringUtils.hasText(user.getUserName())) {
@@ -41,6 +43,12 @@ public class LoginController {
             throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
         }
         return loginService.login(user);
+    }
+
+    @PostMapping("/user/logout")
+    public ResponseResult logout() {
+
+        return loginService.logout();
     }
 
     @GetMapping("getInfo")
