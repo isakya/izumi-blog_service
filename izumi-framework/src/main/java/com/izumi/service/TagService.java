@@ -1,7 +1,10 @@
 package com.izumi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.izumi.domain.ResponseResult;
+import com.izumi.domain.dto.TagListDto;
 import com.izumi.domain.entity.Tag;
+import com.izumi.domain.vo.PageVo;
 
 
 /**
@@ -12,4 +15,5 @@ import com.izumi.domain.entity.Tag;
  */
 public interface TagService extends IService<Tag> {
 
+    ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 }
