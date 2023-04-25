@@ -6,6 +6,8 @@ import com.izumi.domain.dto.TagListDto;
 import com.izumi.domain.entity.Tag;
 import com.izumi.domain.vo.PageVo;
 
+import java.util.List;
+
 
 /**
  * 标签(Tag)表服务接口
@@ -18,4 +20,6 @@ public interface TagService extends IService<Tag> {
     ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
 
     ResponseResult addTag(Tag tag);
+
+    ResponseResult deleteTagByIds(List<Long> ids);
 }

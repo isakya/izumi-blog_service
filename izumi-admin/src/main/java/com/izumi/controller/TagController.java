@@ -8,6 +8,8 @@ import com.izumi.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/content/tag")
 public class TagController {
@@ -21,5 +23,9 @@ public class TagController {
     @PostMapping
     public ResponseResult addTag(@RequestBody Tag tag) {
         return tagService.addTag(tag);
+    }
+    @DeleteMapping("{ids}")
+    public ResponseResult deleteTagByIds(@PathVariable("ids") List<Long> ids) {
+        return tagService.deleteTagByIds(ids);
     }
 }
