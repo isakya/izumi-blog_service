@@ -5,6 +5,7 @@ import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.TagListDto;
 import com.izumi.domain.entity.Tag;
 import com.izumi.domain.vo.PageVo;
+import com.izumi.domain.vo.TagVo;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface TagService extends IService<Tag> {
     ResponseResult updateTag(Tag tag);
 
     ResponseResult<Tag> getTagById(Long id);
+
+    List<TagVo> listAllTag();
 }

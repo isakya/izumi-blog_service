@@ -7,8 +7,10 @@ import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.TagListDto;
 import com.izumi.domain.entity.Tag;
 import com.izumi.domain.vo.PageVo;
+import com.izumi.domain.vo.TagVo;
 import com.izumi.mapper.TagMapper;
 import com.izumi.service.TagService;
+import com.izumi.utils.BeanCopyUtils;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.TagName;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -65,5 +67,12 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return ResponseResult.okResult(tag);
     }
 
-
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Tag::getId, Tag::getName);
+        List<Tag> list = list(wrapper);
+        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(list, TagVo.class);
+        return tagVos;
+    }
 }
