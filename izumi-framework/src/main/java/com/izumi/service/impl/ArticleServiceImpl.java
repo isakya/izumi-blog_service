@@ -19,9 +19,11 @@ import com.izumi.service.ArticleTagService;
 import com.izumi.service.CategoryService;
 import com.izumi.utils.BeanCopyUtils;
 import com.izumi.utils.RedisCache;
+import com.izumi.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -150,5 +152,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         articleTagService.saveBatch(articleTags);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult<List<Article>> getAllArticleList(Integer pageNum, Integer pageSize, Article article) {
+        // 1.根据文章标题(模糊查询)和摘要进行查询
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(article.getTitle()), Article::getTitle, article.getTitle());
+        queryWrapper.like(StringUtils.hasText(article.getSummary()), Article::getSummary, article.getSummary());
+
+        // 2.分页查询
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        page(page, queryWrapper);
+
+        List<Article> articles = page.getRecords();
+        PageVo pageVo = new PageVo(articles, page.getTotal());
+        return ResponseResult.okResult(pageVo);
     }
 }

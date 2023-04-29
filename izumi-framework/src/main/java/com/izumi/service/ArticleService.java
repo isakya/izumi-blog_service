@@ -5,6 +5,8 @@ import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.AddArticleDto;
 import com.izumi.domain.entity.Article;
 
+import java.util.List;
+
 public interface ArticleService extends IService<Article> {
     ResponseResult hotArticleList();
 
@@ -15,4 +17,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult updateViewCount(Long id);
 
     ResponseResult add(AddArticleDto article);
+
+    ResponseResult<List<Article>> getAllArticleList(Integer pageNum, Integer pageSize, Article article);
 }
