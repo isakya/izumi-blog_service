@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
+import com.izumi.domain.dto.AddArticleDto;
 import com.izumi.domain.entity.Article;
+import com.izumi.domain.entity.ArticleTag;
 import com.izumi.domain.entity.Category;
 import com.izumi.domain.vo.ArticleDetailVo;
 import com.izumi.domain.vo.ArticleListVo;
@@ -13,11 +15,13 @@ import com.izumi.domain.vo.HotArticleVo;
 import com.izumi.domain.vo.PageVo;
 import com.izumi.mapper.ArticleMapper;
 import com.izumi.service.ArticleService;
+import com.izumi.service.ArticleTagService;
 import com.izumi.service.CategoryService;
 import com.izumi.utils.BeanCopyUtils;
 import com.izumi.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +37,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private ArticleTagService articleTagService;
+
     @Override
     public ResponseResult hotArticleList() {
         // 查询热门文章，封装成ResponseResult返回
@@ -47,7 +54,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 最多只查询10条
         Page<Article> page = new Page<>(1, 10);
-        page(page,queryWrapper);
+        page(page, queryWrapper);
 
         List<Article> articles = page.getRecords();
 
@@ -67,7 +74,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 查询条件
         LambdaQueryWrapper<Article> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         // 如果有categoryId，查询时就要和传入的相同
-        lambdaQueryWrapper.eq(Objects.nonNull(categoryId)&&categoryId>0, Article::getCategoryId, categoryId);
+        lambdaQueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0, Article::getCategoryId, categoryId);
 
         // 状态是正式发布的
         lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
@@ -97,7 +104,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(page.getRecords(), ArticleListVo.class);
 
 
-
         PageVo pageVo = new PageVo(articleListVos, page.getTotal());
 
         return ResponseResult.okResult(pageVo);
@@ -115,7 +121,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 根据分类id查询分类名
         Long categoryId = articleDetailVo.getCategoryId();
         Category category = categoryService.getById(categoryId);
-        if(category!=null) {
+        if (category != null) {
             articleDetailVo.setCategoryName(category.getName());
         }
         // 封装响应返回
@@ -126,6 +132,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult updateViewCount(Long id) {
         // 更新redis中对应id的浏览量
         redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    @Transactional
+    public ResponseResult add(AddArticleDto articleDto) {
+        // 添加博客
+        Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
+        save(article);
+
+        List<ArticleTag> articleTags = articleDto.getTags().stream()
+                .map(tagId -> new ArticleTag(article.getId(), tagId))
+                .collect(Collectors.toList());
+
+        // 添加 博客和标签的关联
+        articleTagService.saveBatch(articleTags);
+
         return ResponseResult.okResult();
     }
 }

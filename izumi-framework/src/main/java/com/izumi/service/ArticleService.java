@@ -2,6 +2,7 @@ package com.izumi.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.izumi.domain.ResponseResult;
+import com.izumi.domain.dto.AddArticleDto;
 import com.izumi.domain.entity.Article;
 
 public interface ArticleService extends IService<Article> {
@@ -12,4 +13,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getArticleDetail(Long id);
 
     ResponseResult updateViewCount(Long id);
+
+    ResponseResult add(AddArticleDto article);
 }
