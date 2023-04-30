@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Menu;
-import com.izumi.enums.AppHttpCodeEnum;
 import com.izumi.mapper.MenuMapper;
 import com.izumi.service.MenuService;
 import com.izumi.utils.SecurityUtils;
@@ -112,6 +111,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             throw new RuntimeException("不能把父菜单设置为当前菜单");
         }
         updateById(menu);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult deleteMenuById(Long id) {
+        LambdaQueryWrapper<Menu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Menu::getId, id);
+        int count = count(lambdaQueryWrapper);
+        if(count > 0) {
+            throw new RuntimeException("当前菜单存在子菜单，不允许删除");
+        }
+        removeById(id);
         return ResponseResult.okResult();
     }
 
