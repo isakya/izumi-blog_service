@@ -9,14 +9,12 @@ import com.izumi.domain.dto.AddArticleDto;
 import com.izumi.domain.entity.Article;
 import com.izumi.domain.entity.ArticleTag;
 import com.izumi.domain.entity.Category;
-import com.izumi.domain.vo.ArticleDetailVo;
-import com.izumi.domain.vo.ArticleListVo;
-import com.izumi.domain.vo.HotArticleVo;
-import com.izumi.domain.vo.PageVo;
+import com.izumi.domain.vo.*;
 import com.izumi.mapper.ArticleMapper;
 import com.izumi.service.ArticleService;
 import com.izumi.service.ArticleTagService;
 import com.izumi.service.CategoryService;
+import com.izumi.service.TagService;
 import com.izumi.utils.BeanCopyUtils;
 import com.izumi.utils.RedisCache;
 import com.izumi.utils.SecurityUtils;
@@ -169,4 +167,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         PageVo pageVo = new PageVo(articles, page.getTotal());
         return ResponseResult.okResult(pageVo);
     }
+
+    @Override
+    public ResponseResult<List<UpdateArticleVo>> getArticleDetailById(Long id) {
+        Article article = getById(id);
+        UpdateArticleVo updateArticleVo = BeanCopyUtils.copyBean(article, UpdateArticleVo.class);
+        List<Long> tagList = articleTagService.getTagList(id);
+        updateArticleVo.setTags(tagList);
+        return ResponseResult.okResult(updateArticleVo);
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.izumi.controller;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.AddArticleDto;
 import com.izumi.domain.entity.Article;
+import com.izumi.domain.vo.UpdateArticleVo;
 import com.izumi.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,9 @@ public class ArticleController {
     @GetMapping("/list")
     public ResponseResult<List<Article>> getAllArticleList(Integer pageNum, Integer pageSize, Article article) {
         return articleService.getAllArticleList(pageNum, pageSize, article);
+    }
+    @GetMapping("/{id}")
+    public ResponseResult<List<UpdateArticleVo>> getArticleDetailById(@PathVariable Long id) {
+        return articleService.getArticleDetailById(id);
     }
 }
