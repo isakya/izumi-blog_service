@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.izumi.constants.SystemConstants;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Menu;
+import com.izumi.enums.AppHttpCodeEnum;
 import com.izumi.mapper.MenuMapper;
 import com.izumi.service.MenuService;
 import com.izumi.utils.SecurityUtils;
@@ -93,8 +94,25 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
+    public ResponseResult<Menu> getMenuById(Long id) {
+        Menu menu = getById(id);
+        return ResponseResult.okResult(menu);
+    }
+
+    @Override
     public ResponseResult addMenu(Menu menu) {
         save(menu);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult updateMenu(Menu menu) {
+
+        if(menu.getId().equals(menu.getParentId())) {
+            throw new RuntimeException("不能把父菜单设置为当前菜单");
+        }
+        updateById(menu);
+        return ResponseResult.okResult();
+    }
+
 }
