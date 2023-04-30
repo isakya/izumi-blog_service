@@ -3,11 +3,13 @@ package com.izumi.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.izumi.constants.SystemConstants;
+import com.izumi.domain.ResponseResult;
 import com.izumi.domain.entity.Menu;
 import com.izumi.mapper.MenuMapper;
 import com.izumi.service.MenuService;
 import com.izumi.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +26,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<String> selectPermsByUserId(Long id) {
         // 如果是管理员，返回所有的权限
-        if(SecurityUtils.isAdmin()) {
+        if (SecurityUtils.isAdmin()) {
             LambdaQueryWrapper<Menu> wrapper = new LambdaQueryWrapper<>();
             wrapper.in(Menu::getMenuType, SystemConstants.MENU, SystemConstants.BUTTON);
             wrapper.eq(Menu::getStatus, SystemConstants.STATUS_NORMAL);
@@ -43,7 +45,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         MenuMapper menuMapper = getBaseMapper();
         List<Menu> menus = null;
         // 判断是否是管理员
-        if(SecurityUtils.isAdmin()) {
+        if (SecurityUtils.isAdmin()) {
             // 如果是 获取所有符合要求的Menu
             menus = menuMapper.selectAllRouterMenu();
         } else {
@@ -76,5 +78,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                 .map(m -> m.setChildren(getChildren(m, menus)))
                 .collect(Collectors.toList());
         return childrenList;
+    }
+
+
+    @Override
+    public ResponseResult<List<Menu>> getAllMenuList(String status, String menuName) {
+        LambdaQueryWrapper<Menu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(StringUtils.hasText(status), Menu::getStatus, status)
+                .like(StringUtils.hasText(menuName), Menu::getMenuName, menuName)
+                .orderByAsc(Menu::getParentId, Menu::getOrderNum);
+
+        List<Menu> menuList = list(lambdaQueryWrapper);
+        return ResponseResult.okResult(menuList);
+    }
+
+    @Override
+    public ResponseResult addMenu(Menu menu) {
+        save(menu);
+        return ResponseResult.okResult();
     }
 }
