@@ -13,6 +13,5 @@ import java.util.List;
  * @since 2023-04-29 10:32:24
  */
 public interface ArticleTagService extends IService<ArticleTag> {
-
     List<Long> getTagList(Long id);
 }

@@ -3,6 +3,7 @@ package com.izumi.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.izumi.domain.ResponseResult;
 import com.izumi.domain.dto.AddArticleDto;
+import com.izumi.domain.dto.UpdateArticleDto;
 import com.izumi.domain.entity.Article;
 import com.izumi.domain.vo.UpdateArticleVo;
 
@@ -22,4 +23,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult<List<Article>> getAllArticleList(Integer pageNum, Integer pageSize, Article article);
 
     ResponseResult<List<UpdateArticleVo>> getArticleDetailById(Long id);
+
+    ResponseResult updateArticle(UpdateArticleDto updateArticleDto);
 }
